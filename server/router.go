@@ -4,12 +4,14 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	helperHandler "github.com/michaelyusak/go-helper/handler"
-	"github.com/michaelyusak/go-helper/middleware"
+	helperMiddleware "github.com/michaelyusak/go-helper/middleware"
 	"github.com/michaelyusak/kredit-plus-xyz/adaptor"
 	"github.com/michaelyusak/kredit-plus-xyz/config"
 	"github.com/michaelyusak/kredit-plus-xyz/handler"
+	"github.com/michaelyusak/kredit-plus-xyz/middleware"
 	"github.com/michaelyusak/kredit-plus-xyz/repository"
 	"github.com/michaelyusak/kredit-plus-xyz/service"
+	"github.com/michaelyusak/kredit-plus-xyz/utils"
 	"github.com/sirupsen/logrus"
 )
 
@@ -17,6 +19,7 @@ type routerOpts struct {
 	common      *helperHandler.CommonHandler
 	user        *handler.UserHandler
 	transaction *handler.TransactionHandler
+	jwt         utils.JWTHelper
 }
 
 func createRouter(config config.ServiceConfig, log *logrus.Logger) *gin.Engine {
@@ -32,10 +35,13 @@ func createRouter(config config.ServiceConfig, log *logrus.Logger) *gin.Engine {
 	userHandler := handler.NewUserHandler(userService, config.ContextTimeout)
 	transactionHandler := handler.NewTransactionHandler(transactionService)
 
+	jwtHelper := utils.NewJWTHelper(config.Jwt)
+
 	opt := routerOpts{
 		common:      commonHandler,
 		user:        userHandler,
 		transaction: transactionHandler,
+		jwt:         jwtHelper,
 	}
 
 	router := newRouter(opt, log)
@@ -51,15 +57,17 @@ func newRouter(routerOpts routerOpts, log *logrus.Logger) *gin.Engine {
 	router.ContextWithFallback = true
 
 	router.Use(
-		middleware.Logger(log),
-		middleware.RequestIdHandlerMiddleware,
-		middleware.ErrorHandlerMiddleware,
+		helperMiddleware.Logger(log),
+		helperMiddleware.RequestIdHandlerMiddleware,
+		helperMiddleware.ErrorHandlerMiddleware,
 		gin.Recovery(),
 	)
 
+	authMiddleware := middleware.AuthMiddleware(routerOpts.jwt)
+
 	corsRouting(router, corsConfig)
 	commonRouting(router, routerOpts.common)
-	userRouting(router, routerOpts.user)
+	userRouting(router, routerOpts.user, authMiddleware)
 
 	return router
 }
@@ -78,6 +86,6 @@ func commonRouting(router *gin.Engine, common *helperHandler.CommonHandler) {
 	router.NoRoute(common.NoRoute)
 }
 
-func userRouting(router *gin.Engine, user *handler.UserHandler) {
-	router.POST("/api/v1/register", user.Register)
+func userRouting(router *gin.Engine, user *handler.UserHandler, auth gin.HandlerFunc) {
+	router.POST("/api/v1/register", auth, user.Register)
 }

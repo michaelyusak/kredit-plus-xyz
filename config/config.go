@@ -16,11 +16,17 @@ type DBConfig struct {
 	DbName   string `json:"db_name"`
 }
 
+type JwtConfig struct {
+	Issuer string `json:"issuer"`
+	Key    string `json:"key"`
+}
+
 type ServiceConfig struct {
-	Port           string   `json:"port"`
-	GracefulPeriod int64    `json:"graceful_perion_s"`
-	ContextTimeout int64    `json:"context_timeout_s"`
-	Postgres       DBConfig `json:"postgres"`
+	Port           string    `json:"port"`
+	GracefulPeriod int64     `json:"graceful_perion_s"`
+	ContextTimeout int64     `json:"context_timeout_s"`
+	Postgres       DBConfig  `json:"postgres"`
+	Jwt            JwtConfig `json:"jwt"`
 }
 
 func Init(log *logrus.Logger) ServiceConfig {
