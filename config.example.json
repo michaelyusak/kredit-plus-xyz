@@ -1,0 +1,11 @@
+{
+    "port": "8080",
+    "graceful_period": 300,
+    "postgres": {
+        "username": "postgres",
+        "password": "password",
+        "host": "127.0.0.1",
+        "port": "5432",
+        "db_name": "kredit_plus_xyz_db"
+    }
+}
