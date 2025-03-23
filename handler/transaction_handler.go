@@ -1,6 +1,6 @@
 package handler
 
-import "github.com/michaelyusak/kredit-plus-xyz/users/service"
+import "github.com/michaelyusak/kredit-plus-xyz/service"
 
 type TransactionHandler struct {
 	transactionService service.TransactionService

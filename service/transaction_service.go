@@ -1,6 +1,6 @@
 package service
 
-import "github.com/michaelyusak/kredit-plus-xyz/users/repository"
+import "github.com/michaelyusak/kredit-plus-xyz/repository"
 
 type transactionServiceImpl struct {
 	transactionRepository repository.TransactionRepository

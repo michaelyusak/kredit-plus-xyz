@@ -5,11 +5,11 @@ import (
 	"github.com/gin-gonic/gin"
 	helperHandler "github.com/michaelyusak/go-helper/handler"
 	"github.com/michaelyusak/go-helper/middleware"
-	"github.com/michaelyusak/kredit-plus-xyz/users/adaptor"
-	"github.com/michaelyusak/kredit-plus-xyz/users/config"
-	"github.com/michaelyusak/kredit-plus-xyz/users/handler"
-	"github.com/michaelyusak/kredit-plus-xyz/users/repository"
-	"github.com/michaelyusak/kredit-plus-xyz/users/service"
+	"github.com/michaelyusak/kredit-plus-xyz/adaptor"
+	"github.com/michaelyusak/kredit-plus-xyz/config"
+	"github.com/michaelyusak/kredit-plus-xyz/handler"
+	"github.com/michaelyusak/kredit-plus-xyz/repository"
+	"github.com/michaelyusak/kredit-plus-xyz/service"
 	"github.com/sirupsen/logrus"
 )
 
@@ -29,7 +29,7 @@ func createRouter(config config.ServiceConfig, log *logrus.Logger) *gin.Engine {
 	transactionService := service.NewTransactionService(transactionRepo)
 
 	commonHandler := &helperHandler.CommonHandler{}
-	userHandler := handler.NewUserHandler(userService)
+	userHandler := handler.NewUserHandler(userService, config.ContextTimeout)
 	transactionHandler := handler.NewTransactionHandler(transactionService)
 
 	opt := routerOpts{
@@ -59,6 +59,7 @@ func newRouter(routerOpts routerOpts, log *logrus.Logger) *gin.Engine {
 
 	corsRouting(router, corsConfig)
 	commonRouting(router, routerOpts.common)
+	userRouting(router, routerOpts.user)
 
 	return router
 }
@@ -75,4 +76,8 @@ func corsRouting(router *gin.Engine, configCors cors.Config) {
 func commonRouting(router *gin.Engine, common *helperHandler.CommonHandler) {
 	router.GET("/ping", common.Ping)
 	router.NoRoute(common.NoRoute)
+}
+
+func userRouting(router *gin.Engine, user *handler.UserHandler) {
+	router.POST("/api/v1/register", user.Register)
 }
