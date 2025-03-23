@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/michaelyusak/go-helper/helper"
-	"github.com/michaelyusak/kredit-plus-xyz/users/config"
+	"github.com/michaelyusak/kredit-plus-xyz/config"
 )
 
 func Init() {

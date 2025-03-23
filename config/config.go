@@ -18,7 +18,8 @@ type DBConfig struct {
 
 type ServiceConfig struct {
 	Port           string   `json:"port"`
-	GracefulPeriod int64    `json:"graceful_perion"`
+	GracefulPeriod int64    `json:"graceful_perion_s"`
+	ContextTimeout int64    `json:"context_timeout_s"`
 	Postgres       DBConfig `json:"postgres"`
 }
 

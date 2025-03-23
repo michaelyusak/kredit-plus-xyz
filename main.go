@@ -1,6 +1,6 @@
 package main
 
-import "github.com/michaelyusak/kredit-plus-xyz/users/server"
+import "github.com/michaelyusak/kredit-plus-xyz/server"
 
 func main() {
 	server.Init()

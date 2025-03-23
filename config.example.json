@@ -1,6 +1,7 @@
 {
     "port": "8080",
-    "graceful_period": 300,
+    "graceful_period_s": 300,
+    "context_timeot_s": 45,
     "postgres": {
         "username": "postgres",
         "password": "password",
