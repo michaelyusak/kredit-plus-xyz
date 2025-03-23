@@ -8,7 +8,7 @@ require (
 	github.com/go-playground/validator/v10 v10.25.0
 	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/jackc/pgx/v5 v5.7.3
-	github.com/michaelyusak/go-helper v0.0.0-20250323155413-a29aba67cd7b
+	github.com/michaelyusak/go-helper v0.0.0-20250323175717-8034fe559f3f
 	github.com/sirupsen/logrus v1.9.3
 )
 
